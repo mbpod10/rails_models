@@ -6,8 +6,8 @@ class UsersController < ApplicationController
   end
   
   def index
-    @users = User.select(StaticData::COLUMNS)
-    render :json => @users
+    users = User.select(StaticData::COLUMNS).all
+    render :json => users, include: [:posts => {:only => [:id, :user_id, :title, :body]}]
   end
   
   def show   
