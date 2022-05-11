@@ -5,4 +5,6 @@ Rails.application.routes.draw do
   
   resources :posts, only: [:index]
   get 'posts/user/:id', to: 'posts#get_user_posts'
+
+  resources :comments
 end

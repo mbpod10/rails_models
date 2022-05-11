@@ -7,7 +7,9 @@ class UsersController < ApplicationController
   
   def index
     users = User.select(StaticData::COLUMNS).all
-    render :json => users, include: [:posts => {:only => [:id, :user_id, :title, :body]}]
+    render :json => users, include: [:posts => {:only => [:id, :user_id, :title, :body], 
+                                                include: [:comments => {:only => [:id, :body, :post_id, :user_id]}]}]
+
   end
   
   def show   

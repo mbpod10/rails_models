@@ -1,8 +1,8 @@
 class PostsController < ApplicationController 
 
   def index
-    @posts = Post.all
-    render :json => @posts
+    posts = Post.all
+    render json: posts, include: [:user => {:only => [:id, :username]}]
   end
   
   def get_user_posts
