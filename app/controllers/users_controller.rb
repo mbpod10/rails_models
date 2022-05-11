@@ -1,22 +1,23 @@
-class UsersController < ApplicationController
+class UsersController < ApplicationController  
+  
+  class StaticData   
+    EXCLUDE_COLUMNS = ['created_at', 'updated_at']
+    COLUMNS = User.attribute_names - EXCLUDE_COLUMNS
+  end
   
   def index
-    exclude_columns = ['created_at', 'updated_at']
-    columns = User.attribute_names - exclude_columns
-    @users = User.select(columns)
+    @users = User.select(StaticData::COLUMNS)
     render :json => @users
   end
   
-  def show 
-    exclude_columns = ['created_at', 'updated_at']
-    columns = User.attribute_names - exclude_columns
-    @user = User.select(columns).find(params[:id])
+  def show   
+    @user = User.select(StaticData::COLUMNS).find(params[:id])
     render :json => @user
   end
   
   def update
     puts params
-    @user = User.find(params[:id])
+    @user = User.select(StaticData::COLUMNS).find(params[:id])
     @user.update(
       name: params[:name], 
       username: params[:username], 
@@ -28,7 +29,7 @@ class UsersController < ApplicationController
   end
   
   def toggle_member
-    @user = User.find(params[:id])
+    @user = User.select(StaticData::COLUMNS).find(params[:id])
     bool = !@user.member
     @user.member = bool
     @user.save
