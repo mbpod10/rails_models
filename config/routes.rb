@@ -3,4 +3,6 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+  resources :users
+  put 'users/member/:id', to: 'users#toggle_member'
 end
