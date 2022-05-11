@@ -7,4 +7,7 @@ Rails.application.routes.draw do
   get 'posts/user/:id', to: 'posts#get_user_posts'
 
   resources :comments
+  
+ 
+
 end

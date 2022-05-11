@@ -16,6 +16,10 @@ $ rails db:migrate
 // If not sufficient migration then run 
 $ rails db:rollback
 ```
+```
+// Drop Database, create database, reseed
+$ rails db:reset
+```
 
 ### Nested JSON Objects
 ```rb
@@ -104,3 +108,4 @@ class UsersController < ApplicationController
     ]
   }
 ```
+[counter_cache](https://guides.rubyonrails.org/association_basics.html#:~:text=4.1.2.3%20%3Acounter_cache,Consider%20these%20models%3A) = true
