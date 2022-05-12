@@ -1,8 +1,14 @@
 class PostsController < ApplicationController 
 
   def index
-    @posts = Post.all.order(:id)   
-    render json: @posts    
+    @posts = Post.all.order(:id)         
+      
+    render json: {
+                  data: ActiveModelSerializers::SerializableResource.new(@posts, each_serializer: PostSerializer),
+                  message: ['Post list fetched successfully'],
+                  status: 200,
+                  type: 'Success'
+                }    
   end  
   
   def get_user_posts
@@ -13,7 +19,7 @@ class PostsController < ApplicationController
   
   def show        
     @post = Post.find(params[:id])
-    render json: @post
+    render json: {data: @post}
   end
 
   def paginate
