@@ -1,13 +1,9 @@
 class PostsController < ApplicationController 
 
   def index
-    posts = Post.all
-    render json: posts, 
-                        # include: [:user => {:only => [:id, :username]}],
-                        include: [:comments => {:only => [:body, :user_id, :post_id], 
-                        include: [:user => {:only => [:id, :username, :post_count]}]}]
-  end
-
+    @posts = Post.all.order(:id)   
+    render json: @posts    
+  end  
   
   def get_user_posts
     user = User.find(params[:id])
@@ -15,22 +11,18 @@ class PostsController < ApplicationController
     render json: user, include: [:posts => {:only => [:id, :user_id, :title, :body]}]
   end
   
-  # def show  
-  #   @posts = Post.select('*')
-  #                       .joins(:users).where('user.id = post.user_id')
-  #   render json: @posts
-  # end
+  def show        
+    @post = Post.find(params[:id])
+    render json: @post
+  end
 
-  render :json => @users, include: [:posts => {:only => [:id, :user_id, :title, :body, :comments_count], 
-    include: [:comments => {:only => [:id, :body, :post_id, :user_id, :comments]}]}]
-
-  def show  
-    post = Post.find(params[:id])
-    render :json => post, include: [:user => {:only => [:id, :username]},
-                          include: [:comments => {:only => [:id, :body, :comments]}]]
-
-
-
+  def paginate
+    limit = params[:limit].to_i
+    page_num = params[:page_num]
+    page = page_num.to_i - 1
+    d = limit * page
+    @posts = Post.all.order(:id).limit(d).offset(page)   
+    render json: @posts    
   end
  
 
