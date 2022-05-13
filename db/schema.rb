@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_13_135757) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_13_142328) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -28,8 +28,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_13_135757) do
     t.integer "user_id"
     t.string "title"
     t.string "body"
-    t.integer "comments_count"
-    t.integer "tags_count"
+    t.integer "comments_count", default: 0
+    t.integer "tags_count", default: 0
   end
 
   create_table "tags", force: :cascade do |t|
@@ -46,8 +46,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_13_135757) do
     t.boolean "member"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "posts_count"
-    t.integer "comments_count"
+    t.integer "posts_count", default: 0
+    t.integer "comments_count", default: 0
   end
 
 end

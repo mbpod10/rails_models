@@ -1,5 +1,5 @@
 class PostSerializer < ActiveModel::Serializer
-  attributes :id, :title, :body, :tags, :comments_count, :user_id, :user, :comments 
+  attributes :id, :title, :body, :tags_count, :tags, :user_id, :user, :comments_count, :comments 
 
   def user 
     object.user.username

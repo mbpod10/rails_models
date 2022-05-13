@@ -22,90 +22,111 @@ $ rails db:reset
 ```
 
 ### Nested JSON Objects
+- Create serializers
 ```rb
-class UsersController < ApplicationController  
-  
-  class StaticData   
-    EXCLUDE_COLUMNS = ['created_at', 'updated_at']
-    COLUMNS = User.attribute_names - EXCLUDE_COLUMNS
-  end
-  
-  def index
-    users = User.select(StaticData::COLUMNS).all
-    render :json => users, include: [:posts => {:only => [:id, :user_id, :title, :body], 
-                                                include: [:comments => {:only => [:id, :body, :post_id, :user_id]}]}]
+gem 'active_model_serializers'
+```
+```
+$ bundle install
+$ rails generate serializer post
+```
+This creates a serializer file in app/serializers/post_serializer.rb
+```rb
+# post_serializer.rb
+class PostSerializer < ActiveModel::Serializer
+  attributes :id, :title, :body, :tags_count, :tags, :user_id, :user, :comments_count, :comments 
 
+  def user 
+    object.user.username
   end
+
+  def comments
+    object.comments.map do |comment|
+      {
+        id: comment.id,
+        user_id: comment.user_id,
+        post_id: comment.post_id,
+        body: comment.body,      
+        username: comment.user.username         
+      }
+    end
+  end
+  
+ def tags
+  object.tags.map do |tag|
+    {
+      tag: tag.tag,
+      id: tag.id
+    }
+  end
+ end  
+  
+end
+```
+
+```rb
+# posts_controller.rb
+class PostsController < ApplicationController 
+
+  def index
+    @posts = Post.all.order(:id)         
+      
+    render json: 
+      {
+        data: ActiveModelSerializers::SerializableResource.new(@posts, each_serializer: PostSerializer),
+        message: ['Post list fetched successfully'],
+        status: 200,
+        type: 'Success'
+      }    
+  end
+end  
 ```
 ```json
 {
-    "id": 4,
-    "name": "Rep. Claud Kihn",
-    "username": "rep.claudkihn",
-    "email": "rep.claudkihn@gmail.com",
-    "member": true,
-    "posts": [
-      {
-        "id": 1,
-        "user_id": 4,
-        "title": "Waistcoat Venmo Letterpress Franzen Master Messenger Bag Flannel Yolo.",
-        "body": "Totam omnis corporis impedit autem.",
-        "comments": []
-      },
-      {
-        "id": 56,
-        "user_id": 4,
-        "title": "Lomo Poutine Everyday Marfa Raw Denim Wayfarers.",
-        "body": "Doloremque quia animi.",
-        "comments": []
-      },
-      {
-        "id": 91,
-        "user_id": 4,
-        "title": "Pop Up Sriracha Sustainable.",
-        "body": "Et iusto laboriosam consequuntur atque quo.",
-        "comments": [
-          {
-            "id": 18,
-            "user_id": 40,
-            "post_id": 91,
-            "body": "Nemo quia earum voluptatibus fugiat."
-          },
-          {
-            "id": 53,
-            "user_id": 32,
-            "post_id": 91,
-            "body": "Sequi voluptas animi blanditiis debitis temporibus."
-          },
-          {
-            "id": 63,
-            "user_id": 10,
-            "post_id": 91,
-            "body": "Perspiciatis corporis asperiores et aliquam."
-          },
-          {
-            "id": 65,
-            "user_id": 3,
-            "post_id": 91,
-            "body": "Natus et soluta."
-          }
-        ]
-      },
-      {
-        "id": 93,
-        "user_id": 4,
-        "title": "Kogi Ethical You Probably Haven't Heard Of Them.",
-        "body": "Occaecati sequi laudantium vel veniam.",
-        "comments": [
-          {
-            "id": 96,
-            "user_id": 12,
-            "post_id": 93,
-            "body": "Distinctio esse ipsam quasi dolore."
-          }
-        ]
-      }
-    ]
-  }
+  "data": [
+    {
+      "id": 1,
+      "title": "Mixtape Fingerstache Freegan Poutine Cliche.",
+      "body": "Consequatur eos voluptas facere nemo dolores.",
+      "tags_count": 2,
+      "tags": [
+        {
+          "tag": "Nature",
+          "id": 1
+        },
+        {
+          "tag": "Trees",
+          "id": 9
+        }
+      ],
+      "user_id": 1,
+      "user": "uteschumm",
+      "comments_count": 3,
+      "comments": [
+        {
+          "id": 4,
+          "user_id": 1,
+          "post_id": 1,
+          "body": "Ea perspiciatis nostrum maxime est facilis.",
+          "username": "uteschumm"
+        },
+        {
+          "id": 18,
+          "user_id": 5,
+          "post_id": 1,
+          "body": "Voluptatem et ipsam.",
+          "username": "sherlydibbertii"
+        },
+        {
+          "id": 32,
+          "user_id": 3,
+          "post_id": 1,
+          "body": "Voluptatem voluptatem qui fuga.",
+          "username": "kiesharutherford"
+        }
+      ]
+    }, ...
+  ]
+}
 ```
-[counter_cache](https://guides.rubyonrails.org/association_basics.html#:~:text=4.1.2.3%20%3Acounter_cache,Consider%20these%20models%3A) = true
+[counter_cache:](https://guides.rubyonrails.org/association_basics.html#:~:text=4.1.2.3%20%3Acounter_cache,Consider%20these%20models%3A)true
