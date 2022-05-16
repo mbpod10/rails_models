@@ -19,7 +19,7 @@ class PostSerializer < ActiveModel::Serializer
   
  def tags
   object.tags.map do |tag|
-   tag.tag
+   tag.tag_name
   end
  end
   

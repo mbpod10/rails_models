@@ -6,7 +6,7 @@ class TagsController < ApplicationController
   
   def name_slug
     name = params[:name]
-    tag = Tag.find_by(tag: name)
-    render json: tag
+    @tag = Tag.find_by(tag_name: name)
+    render json: @tag
   end
 end

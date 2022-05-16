@@ -1,13 +1,12 @@
 class TagSerializer < ApplicationSerializer
-  attributes :id, :tag, :posts
+  attributes :id, :tag_name, :posts
 
   def posts
-    object.post do |post|
+    object.posts.map do |post|
       {
         title: post.title,
         body: post.body,
         username: post.user.username
-
       }
     end
   end

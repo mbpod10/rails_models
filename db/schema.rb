@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_13_142328) do
+ActiveRecord::Schema[7.0].define(version: 2022_05_16_153002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,15 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_13_142328) do
     t.string "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "post_tags", force: :cascade do |t|
+    t.bigint "tag_id"
+    t.bigint "post_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_post_tags_on_post_id"
+    t.index ["tag_id"], name: "index_post_tags_on_tag_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -33,8 +42,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_13_142328) do
   end
 
   create_table "tags", force: :cascade do |t|
-    t.string "tag"
-    t.integer "post_id"
+    t.string "tag_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -50,4 +58,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_13_142328) do
     t.integer "comments_count", default: 0
   end
 
+  add_foreign_key "post_tags", "posts"
+  add_foreign_key "post_tags", "tags"
 end

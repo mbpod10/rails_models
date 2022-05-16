@@ -1,3 +1,4 @@
 class Tag < ApplicationRecord
-  belongs_to :post, counter_cache: true
+  has_many :post_tags
+  has_many :posts, through: :post_tags, counter_cache: true
 end

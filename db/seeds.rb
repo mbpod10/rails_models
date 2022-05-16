@@ -27,16 +27,16 @@ end
 puts "Created #{Post.count} Posts"
 
 Tag.create([
-    {tag: 'Nature', post_id: 1},
-    {tag: 'School', post_id: 2},
-    {tag: 'Nursing', post_id: 4},
-    {tag: 'Education', post_id: 2},
-    {tag: 'Handy', post_id: 6},
-    {tag: 'Sports', post_id: 8},
-    {tag: 'Business', post_id: 9},
-    {tag: 'Tech', post_id: 11},
-    {tag: 'Trees', post_id: 1},
-    {tag: 'Hobby', post_id: 5},
+    {tag_name: 'Nature'},
+    {tag_name: 'School'},
+    {tag_name: 'Nursing'},
+    {tag_name: 'Education'},
+    {tag_name: 'Handy'},
+    {tag_name: 'Sports'},
+    {tag_name: 'Business'},
+    {tag_name: 'Tech'},
+    {tag_name: 'Trees'},
+    {tag_name: 'Hobby'},
 ])
 puts "Created #{Tag.count} Tags"
 
@@ -49,3 +49,23 @@ puts "Created #{Tag.count} Tags"
   )
 end
 puts "Created #{Comment.count} Comments"
+
+# PostTag.create([
+#   {tag_id: 1, post_id: 1},
+#   {tag_id: 1, post_id: 2},
+#   {tag_id: 1, post_id: 3},
+#   {tag_id: 1, post_id: 4},
+#   {tag_id: 2, post_id: 1},
+#   {tag_id: 3, post_id: 1},
+#   {tag_id: 1, post_id: 10},
+#   {tag_id: 3, post_id: 10},
+#   {tag_id: 2, post_id: 6},
+#   ])
+
+  25.times do
+    PostTag.create(
+      tag_id: rand(1..Tag.count),
+      post_id: rand(1..Post.count)
+    )
+  end
+  puts "Created #{PostTag.count} PostTags"
