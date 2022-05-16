@@ -1,7 +1,7 @@
 class PostSerializer < ActiveModel::Serializer
-  attributes :id, :title, :body, :tags_count, :tags, :user_id, :user, :comments_count, :comments 
+  attributes :id, :title, :body, :username, :user_id, :tags_count, :tags, :comments_count, :comments 
 
-  def user 
+  def username 
     object.user.username
   end
 
@@ -19,27 +19,8 @@ class PostSerializer < ActiveModel::Serializer
   
  def tags
   object.tags.map do |tag|
-    {
-      tag: tag.tag,
-      id: tag.id
-    }
+   tag.tag
   end
  end
   
-  
 end
-
-# def comments
-#   object.comments.map do |comment|
-#     {
-#       id: comment.id,
-#       user_id: comment.user_id,
-#       post_id: comment.post_id,
-#       body: comment.body,       
-#       user: {
-#         username: comment.user.username,
-#         posts: posts(comment.user)
-#       }
-#     }
-#   end
-# end

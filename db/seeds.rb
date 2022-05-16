@@ -36,7 +36,7 @@ Tag.create([
     {tag: 'Business', post_id: 9},
     {tag: 'Tech', post_id: 11},
     {tag: 'Trees', post_id: 1},
-    {tag: 'Hobby', post_id: 5}        
+    {tag: 'Hobby', post_id: 5},
 ])
 puts "Created #{Tag.count} Tags"
 
