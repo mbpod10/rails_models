@@ -50,22 +50,11 @@ puts "Created #{Tag.count} Tags"
 end
 puts "Created #{Comment.count} Comments"
 
-# PostTag.create([
-#   {tag_id: 1, post_id: 1},
-#   {tag_id: 1, post_id: 2},
-#   {tag_id: 1, post_id: 3},
-#   {tag_id: 1, post_id: 4},
-#   {tag_id: 2, post_id: 1},
-#   {tag_id: 3, post_id: 1},
-#   {tag_id: 1, post_id: 10},
-#   {tag_id: 3, post_id: 10},
-#   {tag_id: 2, post_id: 6},
-#   ])
 
-  25.times do
-    PostTag.create(
-      tag_id: rand(1..Tag.count),
-      post_id: rand(1..Post.count)
-    )
-  end
-  puts "Created #{PostTag.count} PostTags"
+100.times do
+  PostTag.create(
+    tag_id: rand(1..Tag.count),
+    post_id: rand(1..Post.count)
+  )
+end
+puts "Created #{PostTag.count} PostTags"
