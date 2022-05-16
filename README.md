@@ -130,3 +130,95 @@ end
 }
 ```
 [counter_cache:](https://guides.rubyonrails.org/association_basics.html#:~:text=4.1.2.3%20%3Acounter_cache,Consider%20these%20models%3A)true
+
+## Many-To-Many Relationships
+- Create many to many relationship of Posts and Tags
+```
+$ rails g migration CreatePostTags    
+```
+```rb
+class CreatePostTags < ActiveRecord::Migration[7.0]
+  def change
+    create_table :post_tags do |t|
+      t.references :tag, foreign_key: true
+      t.references :post, foreign_key: true
+
+      t.timestamps
+    end
+  end
+end
+```
+references means that the the column will be given an _id suffix column that will hold an integer as a foreign key. It will add relational integrity with sql REFERENCES, and indexing.
+```
+$ rails db:migrate
+```
+```rb
+# schema.rb
+  create_table "post_tags", force: :cascade do |t|
+    t.bigint "tag_id"
+    t.bigint "post_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_post_tags_on_post_id"
+    t.index ["tag_id"], name: "index_post_tags_on_tag_id"
+  end
+```
+```rb
+# app/models/post_tag.rb
+class PostTag < ApplicationRecord
+  belongs_to :post
+  belongs_to :tag
+end
+# app/models/post.rb
+class Post < ApplicationRecord
+  has_many :post_tags
+  has_many :tags, through: :post_tags
+end
+# app/models/tag.rb
+class Tag < ApplicationRecord
+  has_many :post_tags
+  has_many :posts, through: :post_tags, counter_cache: true
+end
+```
+```rb
+# seeds.rb
+25.times do
+  PostTag.create(
+    tag_id: rand(1..Tag.count),
+    post_id: rand(1..Post.count)
+  )
+end
+puts "Created #{PostTag.count} PostTags"
+```
+```
+$ rails c
+$ tag = Tag.find(8)
+$ tag.posts
+```
+```rb
+[#<Post:0x00007f7d98dd3f20
+  id: 20,
+  created_at: Mon, 16 May 2022 15:52:03.778211000 UTC +00:00,
+  updated_at: Mon, 16 May 2022 15:52:03.778211000 UTC +00:00,
+  user_id: 10,
+  title: "Twee Marfa Thundercats Microdosing Swag Chillwave Keytar Venmo.",
+  body: "Molestias rerum eveniet.",
+  comments_count: 2,
+  tags_count: 0>,
+ #<Post:0x00007f7d98f1f7a8
+  id: 10,
+  created_at: Mon, 16 May 2022 15:52:03.685514000 UTC +00:00,
+  title: "Kickstarter Truffaut Pabst Brunch Brooklyn.",
+  body: "Alias blanditiis atque consequuntur.",
+  comments_count: 1,
+  tags_count: 0>,
+ #<Post:0x00007f7d98f1f6b8
+  id: 12,
+  created_at: Mon, 16 May 2022 15:52:03.702858000 UTC +00:00,
+  updated_at: Mon, 16 May 2022 15:52:03.702858000 UTC +00:00,
+  user_id: 2,
+  title: "Hoodie Chartreuse Photo Booth Squid Everyday Plaid.",
+  body: "Et modi dolorum suscipit.",
+  comments_count: 2,
+  tags_count: 0>]
+```
