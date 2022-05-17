@@ -9,5 +9,6 @@ Rails.application.routes.draw do
   get 'posts/paginate/:page_num/:limit', to:'posts#paginate'
   resources :tags
   get 'tags/s/:name', to:'tags#name_slug'
+  resources :totals
 
 end
