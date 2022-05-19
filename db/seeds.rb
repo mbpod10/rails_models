@@ -10,7 +10,9 @@ for x in 1..10 do
     name: temp_name,
     email: email,
     username: username,
-    member: Faker::Boolean.boolean
+    member: Faker::Boolean.boolean,
+    # avatar: Faker::Avatar.image(slug: temp_name.split(" ").join("-"))
+    avatar: "https://i.pravatar.cc/150?img=#{x}"
   })
 end
 users = User.create(user_return)
@@ -21,7 +23,7 @@ puts "Created #{User.count} users"
   Post.create(
     user_id: rand(1..User.count),
     title:  Faker::Hipster.sentence(word_count: 3).titleize,
-    body: Faker::Lorem.sentence(word_count: 3, supplemental: false, random_words_to_add: 4)
+    body: Faker::Lorem.sentence(word_count: 300, supplemental: false, random_words_to_add: 4)
   )
 end
 puts "Created #{Post.count} Posts"
